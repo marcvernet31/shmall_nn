@@ -4,26 +4,22 @@
 #include <stdlib.h>
 #include <string.h>
 
+// TODO
 double single_in_single_out_nn(double  input, double weight) {
-	// TODO: Return the result of multiplication of input and its weight.
    	return input * weight;
 }
 
-
+// TODO
 double weighted_sum(double * input, double * weight, uint32_t INPUT_LEN) {
 	double output = 0;
-	// TODO: Use for loop to multiply all inputs with their weights
-	for(int i = 0; i < INPUT_LEN; ++i){
-		output += input[i] * weight[i];
-	}
+	for(int i = 0; i < INPUT_LEN; ++i) output += input[i] * weight[i];
+
  return output;
 }
 
-
+// TODO
 double multiple_inputs_single_output_nn(double * input, double *weight, uint32_t INPUT_LEN) {
-	double predicted_value = 0;
-	// TODO: Use weighted_sum function to calculate the output
-	return predicted_value;
+	return weighted_sum(input, weight, INPUT_LEN);
 }
 
 
@@ -40,10 +36,9 @@ void single_input_multiple_output_nn(double input_scalar, double *weight_vector,
   elementwise_multiple(input_scalar, weight_vector,output_vector,VECTOR_LEN);
 }
 
-
+// TODO
 void matrix_vector_multiplication(double * input_vector, uint32_t INPUT_LEN, double * output_vector,
 		uint32_t OUTPUT_LEN, double weights_matrix[OUTPUT_LEN][INPUT_LEN]) {
-	// TODO: Use two for loops to calculate output vector based on the input vector and weights matrix
 	for(int i = 0; i < OUTPUT_LEN; ++i){
 		output_vector[i] = 0;
 		for(int j = 0; j < INPUT_LEN; ++j){
@@ -122,13 +117,13 @@ void linear_forward_nn(double *input_vector, uint32_t INPUT_LEN,
 	for(int k=0;k<OUTPUT_LEN;k++){
 		output_vector[k]+=weights_b[k];
 	}
+
 }
 
-
+// TODO
 double relu(double x){
-	// TODO: Calculate ReLu based on its mathematical formula
 	if(x > 0) return x;
-	return 0;
+	else return 0;
 }
 
 
@@ -138,10 +133,9 @@ void vector_relu(double *input_vector, double *output_vector, uint32_t LEN) {
 		}
 }
 
-
+// TODO:
 // 1 / (1 + e^-x)
 double sigmoid(double x) {
-	// TODO: Calculate sigmoid based on its mathematical formula
 	 double result = 1 / (1 + exp(-x));
 	 return result;
 }
@@ -218,53 +212,38 @@ void weightsB_zero_initialization(double * weightsB, uint32_t LEN){
 }
 
 
+// que fa la m ??
 void relu_backward(uint32_t m, uint32_t LAYER_LEN, double dA[m][LAYER_LEN], double Z[m][LAYER_LEN], double dZ[m][LAYER_LEN]) {
 	//TODO: implement derivative of relu function  You can can choose either to calculate for all example at the same time
 	//or make iteratively. Check formula for derivative lecture 5 on slide 24
-	for(int i = 0; i < m; ++i){
-		for(int j = 0; j < LAYER_LEN; ++j){
-			if(Z[i][j] >= 0){
-				dZ[i][j] = dA[i][j]; // relu der. is 1
+		for(int i = 0; i < LAYER_LEN; ++i){
+			if(Z[0][i] >= 0){
+				dZ[0][i] = dA[0][i]; // relu der. is 1
 			}
 			else{
-				dZ[i][j] = 0; // relu der. is 1
+				dZ[0][i] = 0; // relu der. is 1
 			}
 		}
-	}
 }
 
 
+// perque m ?
 void linear_backward(uint32_t LAYER_LEN, uint32_t PREV_LAYER_LEN, uint32_t m, double dZ[m][LAYER_LEN],
 		double A_prev[m][PREV_LAYER_LEN], double dW[LAYER_LEN][PREV_LAYER_LEN], double * db ){
 	// TODO: implement linear backward. You can can choose either to calculate for all example at the same time (dw= 1/m *A_prev[T]*dZ;)
 	//or make iteratively  (dw_iter= A_prev[T]*dZ;)
+  matrix_matrix_multiplication(LAYER_LEN, m, PREV_LAYER_LEN, dZ, A_prev, dW);
+  matrix_matrix_sum(LAYER_LEN, m, db, dZ, db); // funciona??
+
+  /*
 	for(int i = 0; i < LAYER_LEN; ++i){
 		for(int j = 0; j < PREV_LAYER_LEN; ++j){
 			dW[i][j] = (1.0 / m) * A_prev[0][j] * dZ[0][i];
 		}
 		db[i] += dZ[0][i];
-		//db[i] *= (1.0 / m);
 	}
+  */
 
-	/*
-	 *
-
-	for(int i = 0; i < LAYER_LEN; ++i){
-		for(int j = 0; j < PREV_LAYER_LEN; ++j){
-			dW[i][j] = A_prev[0][i] * dZ[0][i];
-		}
-	}
-
-
-	for(int j = 0; j < LAYER_LEN; ++j){
-		for(int i = 0; i < PREV_LAYER_LEN; ++i){
-			dW[j][i] = (1.0 / m) * A_prev[j][i] * dZ[j][j];
-			//dW[j][i] = A_prev[j][i] * dZ[j][j];
-			db[j] += dZ[j][i];
-			db[j] *= (1.0 / m);
-		}
-	}
-*/
 }
 
 
@@ -354,5 +333,3 @@ void matrix_transpose(uint32_t ROW, uint32_t COL, double A[ROW][COL], double A_T
 		}
 	}
 }
-
-
