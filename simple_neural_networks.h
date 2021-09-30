@@ -21,7 +21,9 @@ double relu(double x);
 void vector_relu(double * input_vector, double * output_vector, uint32_t LEN);
 void vector_sigmoid(double * input_vector, double * output_vector, uint32_t LEN);
 double sigmoid(double x);
-double compute_cost(uint32_t m, double yhat[m][1], double y[m][1]);
+//double compute_cost(uint32_t m, double yhat[m][1], double y[m][1]);
+double compute_cost(uint32_t m, int LEN, double yhat[m][LEN], double y[m][LEN]);
+
 void normalize_data_2d(uint32_t ROW, uint32_t COL, double input_matrix[ROW][COL], double output_matrix[ROW][COL]);
 void weightsB_zero_initialization(double * weightsB, uint32_t LEN);
 void relu_backward(uint32_t m, uint32_t LAYER_LEN, double dA[m][LAYER_LEN], double Z[m][LAYER_LEN], double dZ[m][LAYER_LEN]);
