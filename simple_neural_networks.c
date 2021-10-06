@@ -231,11 +231,24 @@ void relu_backward(uint32_t m, uint32_t LAYER_LEN, double dA[m][LAYER_LEN], doub
 
 // perque m ?
 // TODO
+
+/*
+
 void linear_backward(uint32_t LAYER_LEN, uint32_t PREV_LAYER_LEN, uint32_t m, double dZ[m][LAYER_LEN],
 		double A_prev[m][PREV_LAYER_LEN], double dW[LAYER_LEN][PREV_LAYER_LEN], double * db ){
 
   matrix_matrix_multiplication(LAYER_LEN, m, PREV_LAYER_LEN, dZ, A_prev, dW);
+  //matrix_matrix_sum(LAYER_LEN, m, db, dZ, db); // funciona??
+  for(int i = 0; i <  LAYER_LEN; ++i)
+}
+
+*/
+void linear_backward(uint32_t LAYER_LEN, uint32_t PREV_LAYER_LEN, uint32_t m, double dZ[m][LAYER_LEN],
+		double A_prev[m][PREV_LAYER_LEN], double dW[LAYER_LEN][PREV_LAYER_LEN], double db[LAYER_LEN] ){
+
+  matrix_matrix_multiplication(LAYER_LEN, m, PREV_LAYER_LEN, dZ, A_prev, dW);
   matrix_matrix_sum(LAYER_LEN, m, db, dZ, db); // funciona??
+  //db = dZ;
 }
 
 
