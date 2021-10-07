@@ -4,24 +4,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-// TODO
+
 double single_in_single_out_nn(double  input, double weight) {
    	return input * weight;
 }
 
-// TODO
+
 double weighted_sum(double * input, double * weight, uint32_t INPUT_LEN) {
   double output = 0;
 	for(int i = 0; i < INPUT_LEN; ++i) output += input[i] * weight[i];
   return output;
 }
 
-// TODO
+
 double multiple_inputs_single_output_nn(double * input, double *weight, uint32_t INPUT_LEN) {
 	return weighted_sum(input, weight, INPUT_LEN);
 }
 
-// TODO
+
 void elementwise_multiple( double input_scalar, double *weight_vector, double *output_vector, double VECTOR_LEN) {
 	for(int i = 0; i < VECTOR_LEN; ++i){
 		output_vector[i] = input_scalar * weight_vector[i];
@@ -29,12 +29,11 @@ void elementwise_multiple( double input_scalar, double *weight_vector, double *o
 }
 
 
-
 void single_input_multiple_output_nn(double input_scalar, double *weight_vector, double *output_vector, double VECTOR_LEN){
   elementwise_multiple(input_scalar, weight_vector,output_vector,VECTOR_LEN);
 }
 
-// TODO
+
 void matrix_vector_multiplication(double * input_vector, uint32_t INPUT_LEN, double * output_vector,
 		uint32_t OUTPUT_LEN, double weights_matrix[OUTPUT_LEN][INPUT_LEN]) {
 	for(int i = 0; i < OUTPUT_LEN; ++i){
@@ -51,22 +50,22 @@ void multiple_inputs_multiple_outputs_nn(double * input_vector, uint32_t INPUT_L
 	matrix_vector_multiplication(input_vector,INPUT_LEN,output_vector,OUTPUT_LEN,weights_matrix);
 }
 
-// TODO
+
 void hidden_nn( double *input_vector, uint32_t INPUT_LEN,
 				uint32_t HIDDEN_LEN, double in_to_hid_weights[HIDDEN_LEN][INPUT_LEN],
 				uint32_t OUTPUT_LEN, double hid_to_out_weights[OUTPUT_LEN][HIDDEN_LEN], double *output_vector) {
 
-	double hidden_pred_vector[HIDDEN_LEN]; //?
-  //memset(hidden_pred_vector, 0, HIDDEN_LEN);
+	double hidden_pred_vector[HIDDEN_LEN]; // initialized to zero
 	matrix_vector_multiplication(input_vector, INPUT_LEN, hidden_pred_vector, HIDDEN_LEN, in_to_hid_weights);
 	matrix_vector_multiplication(hidden_pred_vector, HIDDEN_LEN, output_vector, OUTPUT_LEN, hid_to_out_weights);
 
 }
 
-// TODO
+
 double find_error(double yhat, double y) {
 	return pow(yhat - y, 2);
 }
+
 
 void brute_force_learning( double input, double weight, double expected_value, double step_amount, uint32_t itr) {
    double prediction,error;
@@ -75,7 +74,6 @@ void brute_force_learning( double input, double weight, double expected_value, d
 	 for(i=0;i<itr;i++){
 
 		 prediction  = input * weight;
-		 // TODO: Calculate the error
 
 		 error = find_error(prediction, expected_value);
 
@@ -84,19 +82,15 @@ void brute_force_learning( double input, double weight, double expected_value, d
 		 up_prediction =  input * (weight + step_amount);
 		 up_error      =   powf((up_prediction - expected_value),2);
 
-		 // TODO: Calculate down_prediction and down_error on the same way as up_prediction and up_error
 		 down_prediction =  input * (weight - step_amount);
 		 down_error      =  powf((down_prediction - expected_value),2);;
 
 		 if(down_error <  up_error)
-			 // TODO: Change weight value accordingly if down_error is smaller than up_error
 			   weight  = weight - step_amount;
 		 if(down_error >  up_error)
-			 // TODO: Change weight value accordingly if down_error is larger than up_error
 			   weight = weight + step_amount;
 	 }
 }
-
 
 
 void linear_forward_nn(double *input_vector, uint32_t INPUT_LEN,
@@ -110,7 +104,7 @@ void linear_forward_nn(double *input_vector, uint32_t INPUT_LEN,
 
 }
 
-// TODO
+
 double relu(double x){
 	if(x > 0) return x;
 	else return 0;
@@ -123,11 +117,10 @@ void vector_relu(double *input_vector, double *output_vector, uint32_t LEN) {
 		}
 }
 
-// TODO:
+
 // 1 / (1 + e^-x)
 double sigmoid(double x) {
-	 double result = 1 / (1 + exp(-x));
-	 return result;
+	 return (1 / (1 + exp(-x)));
 }
 
 
@@ -137,33 +130,18 @@ void vector_sigmoid(double * input_vector, double * output_vector, uint32_t LEN)
 	}
 }
 
-// TODO
-// meaning of m?
-/*
-double compute_cost(uint32_t m, double yhat[m][1], double y[m][1]) {
-	double cost = 0;
-	// TODO: Calculate cost based on mathematical cost function formula
-	double sum = 0;
-	for(int i = 0; i < m; ++i){
-		sum += y[i][0] * log(yhat[i][0]) + (1.0 - y[i][0]) * log(1.0 - yhat[i][0]);
-	}
-	cost = sum * (-1.0 / m);
-	return cost;
-}
-*/
 
 double compute_cost(uint32_t m, int LEN, double yhat[m][LEN], double y[m][LEN]) {
-
 	double sum = 0;
 	for(int i = 0; i < LEN; ++i){
     if(y[0][i] == 0) sum += log(1.0 - yhat[0][i]);
     else sum -= log(yhat[0][i]);
 	}
 	return( sum * (-1.0 / LEN) );
-
 }
 
 
+/*
 void normalize_data_2d(uint32_t ROW, uint32_t COL, double input_matrix[ROW][COL], double output_matrix[ROW][COL]){
 	double max =  -99999999;
 	for(int i =0;i<ROW;i++){
@@ -179,6 +157,23 @@ void normalize_data_2d(uint32_t ROW, uint32_t COL, double input_matrix[ROW][COL]
 	    output_matrix[i][j] =  input_matrix[i][j]/max;
 		}
 	}
+}
+*/
+
+
+// modified normalization column-wise for matrices
+void normalize_data_2d(uint32_t ROW, uint32_t COL, double input_matrix[ROW][COL], double output_matrix[ROW][COL]){
+  for(int j = 0; j < COL; ++j){
+    double max =  -99999999;
+    for(int i = 0; i < ROW; ++i){
+      if(input_matrix[i][j] >max){
+        max = input_matrix[i][j];
+      }
+    }
+    for(int i = 0; i < ROW; ++i){
+      output_matrix[i][j] =  input_matrix[i][j]/max;
+    }
+  }
 }
 
 
@@ -210,45 +205,48 @@ void weights_random_initialization(uint32_t HIDDEN_LEN, uint32_t INPUT_LEN, doub
 	}
 }
 
+/* generate a random double from min to max */
+double randfrom(double min, double max)
+{
+    double range = (max - min);
+    double div = RAND_MAX / range;
+    return min + (rand() / div);
+}
+
+
+// W[i][j] = U[-1/sqrt(n), 1/sqrt(n)] n: #columns
+// https://paperswithcode.com/method/xavier-initialization
+void weights_xavier_initialization(uint32_t HIDDEN_LEN, uint32_t INPUT_LEN, double weight_matrix[HIDDEN_LEN][INPUT_LEN]) {
+  for(int i = 0; i < HIDDEN_LEN; ++i){
+    for(int j = 0; j < INPUT_LEN; ++j){
+      weight_matrix[i][j] = randfrom(0, 1/sqrt(HIDDEN_LEN));
+    }
+  }
+}
+
 
 void weightsB_zero_initialization(double * weightsB, uint32_t LEN){
 	memset(weightsB, 0, LEN*sizeof(weightsB[0]));
 }
 
-//TODO:
-// que fa la m ??
+
 void relu_backward(uint32_t m, uint32_t LAYER_LEN, double dA[m][LAYER_LEN], double Z[m][LAYER_LEN], double dZ[m][LAYER_LEN]) {
 		for(int i = 0; i < LAYER_LEN; ++i){
 			if(Z[0][i] >= 0){
-				dZ[0][i] = dA[0][i]; // relu der. is 1
+				dZ[0][i] = dA[0][i]; // relu derivative is 1
 			}
 			else{
-				dZ[0][i] = 0; // relu der. is 1
+				dZ[0][i] = 0; // relu derivative is 0
 			}
 		}
 }
 
 
-// perque m ?
-// TODO
-
-/*
-
-void linear_backward(uint32_t LAYER_LEN, uint32_t PREV_LAYER_LEN, uint32_t m, double dZ[m][LAYER_LEN],
-		double A_prev[m][PREV_LAYER_LEN], double dW[LAYER_LEN][PREV_LAYER_LEN], double * db ){
-
-  matrix_matrix_multiplication(LAYER_LEN, m, PREV_LAYER_LEN, dZ, A_prev, dW);
-  //matrix_matrix_sum(LAYER_LEN, m, db, dZ, db); // funciona??
-  for(int i = 0; i <  LAYER_LEN; ++i)
-}
-
-*/
 void linear_backward(uint32_t LAYER_LEN, uint32_t PREV_LAYER_LEN, uint32_t m, double dZ[m][LAYER_LEN],
 		double A_prev[m][PREV_LAYER_LEN], double dW[LAYER_LEN][PREV_LAYER_LEN], double db[LAYER_LEN] ){
 
   matrix_matrix_multiplication(LAYER_LEN, m, PREV_LAYER_LEN, dZ, A_prev, dW);
-  matrix_matrix_sum(LAYER_LEN, m, db, dZ, db); // funciona??
-  //db = dZ;
+  matrix_matrix_sum(LAYER_LEN, m, db, dZ, db);
 }
 
 
@@ -307,7 +305,7 @@ void matrix_matrix_sub(uint32_t MATRIX_ROW, uint32_t MATRIX_COL,
 	 }
 }
 
-//TODO
+
 // W1 = W1 - learning_rate * dW1
 void weights_update(uint32_t MATRIX_ROW, uint32_t MATRIX_COL, double learning_rate,
 									double dW[MATRIX_ROW][MATRIX_COL],
