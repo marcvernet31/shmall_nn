@@ -142,6 +142,7 @@ double compute_cost(uint32_t m, int LEN, double yhat[m][LEN], double y[m][LEN]) 
 
 
 /*
+// Original row-wise normalization
 void normalize_data_2d(uint32_t ROW, uint32_t COL, double input_matrix[ROW][COL], double output_matrix[ROW][COL]){
 	double max =  -99999999;
 	for(int i =0;i<ROW;i++){

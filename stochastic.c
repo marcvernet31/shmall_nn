@@ -6,8 +6,8 @@
 #define NUM_OF_FEATURES   	4  	// input values
 #define NUM_OF_HID1_NODES		3	  // hidden nodes
 #define NUM_OF_OUT_NODES 		3		// output classes
-#define CASES               50 //
-#define EPOCH               50
+#define CASES               50  // number of items on the dataset
+#define EPOCH               25  // number of train epochs
 
 
 double learning_rate = 0.01;
@@ -26,15 +26,6 @@ double raw_x[1][NUM_OF_FEATURES] = {{6.3,2.5,4.9,1.5,},{5.2,4.1,1.5,0.1,},{6.9,3
 
 
 
-/*
-// Input layer to hidden layer weight matrix
-double w1[NUM_OF_HID1_NODES][NUM_OF_FEATURES] =    {{0.25, 0.5,   0.05},   	 //hid[0]
-																										{0.8,  0.82,  0.3 },     //hid[1]
-																										{0.5,  0.45,  0.19}};   //hid[2]
-
-// Hidden layer to output layer weight matrix
-double w2[NUM_OF_OUT_NODES][NUM_OF_HID1_NODES] =    {{0.48, 0.73, 0.03}};
-*/
 double w1[NUM_OF_HID1_NODES][NUM_OF_FEATURES];
 double w2[NUM_OF_OUT_NODES][NUM_OF_HID1_NODES];
 
@@ -46,29 +37,12 @@ double z2[1][NUM_OF_OUT_NODES];	// Predicted output vector
 double yhat[1][NUM_OF_OUT_NODES];
 double yhat_eg[NUM_OF_OUT_NODES];	// Predicted yhat
 
-/*
-// Backpropagation
-double dA1[1][NUM_OF_HID1_NODES] = {{0, 0, 0}};
-double dA2[1][1] = {{0}};
-
-double dZ1[1][NUM_OF_HID1_NODES] = {{0, 0, 0}};
-double dZ2[1][1] = {{0}};
-
-double dW1[NUM_OF_HID1_NODES][NUM_OF_FEATURES] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-double dW2[NUM_OF_OUT_NODES][NUM_OF_HID1_NODES] = {{0, 0, 0}};
-
-double db1[NUM_OF_HID1_NODES] = {0, 0, 0};
-double db2[NUM_OF_OUT_NODES] = {0};
-double W2_T[NUM_OF_HID1_NODES][NUM_OF_OUT_NODES] = {{0},{0},{0}};
-*/
 
 double dA1[1][NUM_OF_HID1_NODES];
-// double dA2[1][1];
-double dA2[1][NUM_OF_OUT_NODES]; //--
+double dA2[1][NUM_OF_OUT_NODES];
 
 double dZ1[1][NUM_OF_HID1_NODES];
-// double dZ2[1][1];
-double dZ2[1][NUM_OF_OUT_NODES]; //--
+double dZ2[1][NUM_OF_OUT_NODES];
 
 double dW1[NUM_OF_HID1_NODES][NUM_OF_FEATURES];
 double dW2[NUM_OF_OUT_NODES][NUM_OF_HID1_NODES];
@@ -82,6 +56,8 @@ void init(){
 
 	weights_random_initialization( NUM_OF_HID1_NODES, NUM_OF_FEATURES, w1);
 	weights_random_initialization( NUM_OF_OUT_NODES, NUM_OF_HID1_NODES, w2);
+  //weights_xavier_initialization( NUM_OF_HID1_NODES, NUM_OF_FEATURES, w1);
+	//weights_xavier_initialization( NUM_OF_OUT_NODES, NUM_OF_HID1_NODES, w2);
 
   weightsB_zero_initialization(b1, NUM_OF_HID1_NODES);
   weightsB_zero_initialization(b2, NUM_OF_OUT_NODES);
@@ -116,7 +92,6 @@ void forward(double raw_x[NUM_OF_FEATURES], double train_y[NUM_OF_FEATURES]){
 
 	double cost = compute_cost(1, NUM_OF_OUT_NODES, yhat, train_y);
   accuracy += checkPrediction( yhat, train_y);
-
 }
 
 double backward(double train_y[NUM_OF_FEATURES]){
@@ -138,9 +113,7 @@ double backward(double train_y[NUM_OF_FEATURES]){
 
 
 void iteration(int i, double raw_x[NUM_OF_FEATURES], double train_y[NUM_OF_FEATURES]){
-	//printf("it %d \n", i);
   forward(raw_x, train_y);
-  //printf("--------- \n");
 	backward(train_y);
 }
 
