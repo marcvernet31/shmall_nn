@@ -2,4 +2,4 @@
 Mini neural network coded in C
 
 
-Documentation to be written
+(Documentation to be written)
