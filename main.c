@@ -1,17 +1,3 @@
-/*
- ============================================================================
- Name        : Lab4_backpropagation.c
- Author      : Mairo Leier
- Version     :
- Copyright   : TalTech
- Description : Backpropagation in C, Ansi-style
-
- If you get error during compilation:
- 	 "undefined reference to `powf'	simple_neural_networks.c	/Lab3_2_PC_find_error/src	line 72	C/C++ Problem"
- Add: Project Properties -> C/C++ Build -> Settings -> Tool Settings -> GCC C Linker -> Miscellanous -> Linker flags: add "-lm -E"
- ============================================================================
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "simple_neural_networks.h"
